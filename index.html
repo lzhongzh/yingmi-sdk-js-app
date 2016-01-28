@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="./node_modules/yingmi-test/dist/yingmi.js">
+        </script>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <style>
+            body{
+                padding: 0;
+                margin:0;
+            }
+            .btns{
+                position: fixed;
+                bottom:0;
+                display: flex;
+                width: 100%;
+                margin:0;
+                padding:0;
+                list-style: none;
+            }
+            .btns li{
+                flex: 1;
+                border-right: 1px solid white;
+                border-top: 1px solid white;
+                text-align: center;
+                height: 40px;
+                font-size: 14px;
+                color: white;
+                background: #0095ff;
+                line-height: 40px;
+            }
+            .btns li:nth-child(2){
+                flex: none;
+                width:120px;
+            }
+            .hide{
+                display: none;
+            }
+            #orderList{
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="brokerLogin">
+            <h1>商户登录</h1>
+            <table>
+                <tr>
+                    <th>用户名:</th>
+                    <td><input id="brokerUserId" value="test01" type="text"/></td>
+                </tr>
+                <tr>
+                    <th>密码:</th>
+                    <td><input id="password" value="123456" type="password"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button onclick="window.brokerLogin()">登录</button>
+                    </td>
+                </tr>
+            </table>
+            <p>sdk demo server返回：</p>
+            <p id="brokerLoginReturn"></p>
+        </div>
+        <div id="getToken" class="hide">
+            <p>拿到的盈米token:</p>
+            <p id="yingmiToken"></p>
+        </div>
+        <div id="invoke" class="hide">
+            <table>
+                <tr>
+                    <th>需要购买的基金code</th>
+                    <td><input type="text" id="fundCode" value="270001"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button style="width:120px;" onclick="window.triggerInvoke()">确定</button></td>
+                </tr>
+            </table>
+            <p>SDK返回信息：</p>
+            <div id="invokeConsole"></div>
+        </div>
+
+        <div id="query" class="hide">
+            <p>SDK返回信息：</p>
+            <div id="queryConsole"></div>
+        </div>
+
+        <ul class="btns">
+            <li><a onclick="window.showbrokerLogin()">商户登录</a></li>
+            <li><a onclick="window.getToken()">获取盈米token</a></li>
+            <li><a onclick="window.showInvoke()">购买基金</a></li>
+            <li><a onclick="window.showQuery()">查看订单</a></li>
+        </ul>
+        <script type="text/javascript">
+            var brokerToken = "";
+            var yingmiToken = "";
+            var serverHost = 'http://localhost:8088';
+
+            var yingmiToken = null,
+                brokerToken = null;
+        
+            function show(id){
+                document.getElementById('brokerLogin').className="hide";
+                document.getElementById('getToken').className="hide";
+                document.getElementById('invoke').className="hide";
+                document.getElementById('query').className="hide";
+                document.getElementById(id).className="";
+            }
+            window.showQuery = function(){
+                show('query');
+                window.triggerQuery();
+            };
+
+            window.showbrokerLogin = function(){
+                show('brokerLogin');
+            };
+            window.brokerLogin = function(){
+                var brokerUserId = document.getElementById('brokerUserId').value,
+                    password = document.getElementById('password').value;
+
+                $.post(serverHost + '/ymb/user/login',{
+                    name: brokerUserId,
+                    password: password
+                },function(data){
+                    document.getElementById('brokerLoginReturn').innerHTML = JSON.stringify(data);
+                    brokerToken = data.token;
+                });
+            };
+
+            window.getToken = function(){
+                show('getToken');
+                if(brokerToken){
+                    $.ajax(serverHost + '/ymb/user/yingmi-token',{
+                        method: 'GET',
+                        data: {
+                            access_token: brokerToken
+                        },
+                        success: function(data){
+                            console.log(data);
+                            document.getElementById('yingmiToken').innerHTML = JSON.stringify(data);
+                            yingmiToken = data.yingmiToken;
+                            window.YingMi.initSDK({
+                                token: yingmiToken,
+                                brokerId: 'asdf'
+                            },function(err,data){
+                                if(err){
+                                    console.log(err.msg);
+                                }
+                            });
+                        },error: function(data){
+                            alert(data.responseJSON.msg);
+                        }
+                    });
+                }else{
+                    alert('您还没有登录');
+                }
+            };
+
+            window.showInvoke = function(){
+                show('invoke');
+            };
+
+            window.triggerInvoke = function(){
+                if(yingmiToken){
+                    var command = 'buyFund';
+
+                    var params = {
+                        fundCode: $('#fundCode').val().trim()
+                    };
+
+                    window.YingMi.callWithUI(command,params,function(err,data){
+                        if(err){
+                            document.getElementById('invokeConsole').innerHTML = 'errMsg: ' + err.msg;
+                        }else{
+                            document.getElementById('invokeConsole').innerHTML = 'successData: ' + JSON.stringify(data);
+                        }
+                    });
+
+                }else{
+                    alert('您还没有获取yingmi token');
+                }
+            };
+
+            window.triggerQuery = function(){
+                if(yingmiToken){
+                    var queryType = 'fundOrders';
+                    var queryParams = {};
+
+                    window.YingMi.call(queryType,queryParams,function(err,data){
+                        if(err){
+                            document.getElementById('queryConsole').innerHTML = 'errMsg: ' + err.msg;
+                        }else{
+                            document.getElementById('queryConsole').innerHTML = 'successData: ' + JSON.stringify(data);
+                        }
+                    });
+                }else{
+                    alert('您还没有获取yingmi token');
+                }
+            };
+        </script>
+    </body>
+</html>
