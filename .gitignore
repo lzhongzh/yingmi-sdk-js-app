@@ -1,0 +1,9 @@
+dist
+app_output
+node_modules
+src/routes.js
+.idea
+.DS_Store
+src/.DS_Store
+.tmp.swp
+npm-debug.log
