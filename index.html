@@ -10,6 +10,21 @@
             body{
                 padding: 0;
                 margin:0;
+                text-align: center;
+                font-family:"Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",FontAwesome,sans-serif;
+            }
+            button{
+                width:100%;
+                height:23px;
+                background:#0099ff;
+                border:none;
+                color:white;
+            }
+            p{
+                word-break:break-all;
+            }
+            table{
+                margin:0 auto;
             }
             .btns{
                 position: fixed;
@@ -70,16 +85,9 @@
             <p id="yingmiToken"></p>
         </div>
         <div id="invoke" class="hide">
-            <table>
-                <tr>
-                    <th>需要购买的基金code</th>
-                    <td><input type="text" id="fundCode" value="270001"/></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button style="width:120px;" onclick="window.triggerInvoke()">确定</button></td>
-                </tr>
-            </table>
+            <p>需要购买的基金code</p>
+            <p><input type="text" id="fundCode" value="270001"/></p>
+            <p><button style="width:120px;" onclick="window.triggerInvoke()">确定</button></p>
             <p>SDK返回信息：</p>
             <div id="invokeConsole"></div>
         </div>
@@ -174,7 +182,7 @@
 
                     window.YingMi.callWithUI(command,params,function(err,data){
                         if(err){
-                            document.getElementById('invokeConsole').innerHTML = 'errMsg: ' + err.msg;
+                            document.getElementById('invokeConsole').innerHTML = JSON.stringify(err);
                         }else{
                             document.getElementById('invokeConsole').innerHTML = 'successData: ' + JSON.stringify(data);
                         }
