@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="./node_modules/yingmi-test/dist/yingmi.js">
+        <script type="text/javascript" src="./node_modules/yingmi-csdk-test/dist/yingmi-csdk.js">
         </script>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <style>
@@ -151,7 +151,7 @@
                             console.log(data);
                             document.getElementById('yingmiToken').innerHTML = JSON.stringify(data);
                             yingmiToken = data.yingmiToken;
-                            window.YingMi.initSDK({
+                            window.YingMiCsdk.initSDK({
                                 token: yingmiToken,
                                 brokerId: 'asdf'
                             },function(err,data){
@@ -180,7 +180,7 @@
                         fundCode: $('#fundCode').val().trim()
                     };
 
-                    window.YingMi.callWithUI(command,params,function(err,data){
+                    window.YingMiCsdk.callWithUI(command,params,function(err,data){
                         if(err){
                             document.getElementById('invokeConsole').innerHTML = JSON.stringify(err);
                         }else{
@@ -198,7 +198,7 @@
                     var queryType = 'fundOrders';
                     var queryParams = {};
 
-                    window.YingMi.call(queryType,queryParams,function(err,data){
+                    window.YingMiCsdk.call(queryType,queryParams,function(err,data){
                         if(err){
                             document.getElementById('queryConsole').innerHTML = 'errMsg: ' + err.msg;
                         }else{

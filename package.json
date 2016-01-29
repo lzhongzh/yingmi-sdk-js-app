@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "jquery": "^2.2.0",
-    "yingmi-test": "^1.0.1"
+    "yingmi-csdk-test": "^1.0.1"
   },
   "devDependencies": {
     "http-server": "^0.8.5"
