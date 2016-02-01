@@ -7,15 +7,37 @@
         </script>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <style>
+            html,body{
+                height:100%;
+                margin:0;
+                padding:0;
+            }
             body{
                 padding: 0;
                 margin:0;
                 text-align: center;
                 font-family:"Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",FontAwesome,sans-serif;
+                background:url('./img/bg.png') center center no-repeat;
+            }
+            #wrapper {
+                box-sizing: border-box;
+                padding:15px;
+                background-color: white;
+                width: 320px;
+                height: 548px;
+                position:absolute;
+                overflow:hidden;
+                top: 50%;
+                left: 50%;
+                margin-top:-259px;
+                margin-left:-160px;
             }
             button{
+                cursor:pointer;
                 width:100%;
-                height:23px;
+                height:30px;
+                line-height:30px;
+                font-size:14px;
                 background:#0099ff;
                 border:none;
                 color:white;
@@ -27,16 +49,19 @@
                 margin:0 auto;
             }
             .btns{
-                position: fixed;
+                position: absolute;
                 bottom:0;
+                left:0;
                 display: flex;
                 width: 100%;
                 margin:0;
                 padding:0;
                 list-style: none;
             }
-            .btns li{
+            .btns p{
                 flex: 1;
+                margin:0;
+                padding:0;
                 border-right: 1px solid white;
                 border-top: 1px solid white;
                 text-align: center;
@@ -46,7 +71,16 @@
                 background: #0095ff;
                 line-height: 40px;
             }
-            .btns li:nth-child(2){
+            .btns p a{
+                display: block;
+                width:100%;
+                height:100%;
+                cursor:pointer;
+            }
+            .btns p a.disable{
+                background-color: #888;
+            }
+            .btns p:nth-child(2){
                 flex: none;
                 width:120px;
             }
@@ -56,11 +90,51 @@
             #orderList{
                 font-size: 12px;
             }
+            #tips{
+                position: absolute;
+                top:50%;
+                text-align: left;
+                padding:10px;
+                left:50%;
+                width:200px;
+                box-sizing: border-box;
+                margin-left: -407px;
+                margin-top: -276px;
+                background-color: #bf6a40;
+                color:white;
+                box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            }
         </style>
     </head>
     <body>
+        <div id="tips">
+            <div id="brokerLoginTips">
+               <h1>1.用户登录</h1>
+               <p>首先,用户在合作方app上进行登录</p>
+            </div>
+            <div id="getTokenTips" class="hide">
+                <h1>2.获取盈米token</h1>
+                <p>在调用盈米SDK的函数前,需要获取
+                    <a href="https://doc.yingmi.cn/pages/viewpage.action?pageId=2066368" target="_blank">盈米token</a>,然后使用盈米token对
+                    <a href="https://doc.yingmi.cn/pages/viewpage.action?pageId=2066397" target="_blank">SDK进行初始化</a>
+                </p>
+            </div>
+            <div id="invokeTips" class="hide">
+                <h1>3.购买基金</h1>
+                <p>
+                    调用盈米SDK的<a href="https://doc.yingmi.cn/pages/viewpage.action?pageId=2066401#callWithUI:params:options:completeBlock:-buyFund" target="_blank">基金购买api</a>
+                </p>
+            </div>
+            <div id="queryTips" class="hide">
+                <h1>4.查询订单</h1>
+                <p>
+                    调用盈米SDK的<a href="https://doc.yingmi.cn/pages/viewpage.action?pageId=2066399#callAsyncWithDataType:params:options:completeBlock:-fundOrders" target="_blank">查询订单接口</a>
+                </p>
+            </div>
+        </div>
+        <div id="wrapper">
         <div id="brokerLogin">
-            <h1>商户登录</h1>
+            <h1>合作方登录页</h1>
             <table>
                 <tr>
                     <th>用户名:</th>
@@ -77,32 +151,57 @@
                     </td>
                 </tr>
             </table>
-            <p>sdk demo server返回：</p>
             <p id="brokerLoginReturn"></p>
         </div>
-        <div id="getToken" class="hide">
-            <p>拿到的盈米token:</p>
+        <div id="getToken">
+            <h1>拿到的盈米token:</h1>
             <p id="yingmiToken"></p>
         </div>
-        <div id="invoke" class="hide">
-            <p>需要购买的基金code</p>
-            <p><input type="text" id="fundCode" value="270001"/></p>
-            <p><button style="width:120px;" onclick="window.triggerInvoke()">确定</button></p>
+        <div id="invoke">
+            <h1>合作方的基金列表</h1>
+            <table style="width:100%;">
+                <tr>
+                    <th>基金名称</th>
+                    <th>基金代码</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td>广发新经济</td>
+                    <td>270050</td>
+                    <td><button onclick="window.triggerInvoke(270050)">购买</button></td>
+                </tr>
+                <tr>
+                    <td>广发沪深300</td>
+                    <td>270010</td>
+                    <td><button onclick="window.triggerInvoke(270010)">购买</button></td>
+                </tr>
+                <tr>
+                    <td>广发聚富</td>
+                    <td>270001</td>
+                    <td><button onclick="window.triggerInvoke(270001)">购买</button></td>
+                </tr>
+                <tr>
+                    <td>广发聚丰</td>
+                    <td>270005</td>
+                    <td><button onclick="window.triggerInvoke(270005)">购买</button></td>
+                </tr>
+            </table>
             <p>SDK返回信息：</p>
             <div id="invokeConsole"></div>
         </div>
 
-        <div id="query" class="hide">
+        <div id="query">
             <p>SDK返回信息：</p>
             <div id="queryConsole"></div>
         </div>
 
-        <ul class="btns">
-            <li><a onclick="window.showbrokerLogin()">商户登录</a></li>
-            <li><a onclick="window.getToken()">获取盈米token</a></li>
-            <li><a onclick="window.showInvoke()">购买基金</a></li>
-            <li><a onclick="window.showQuery()">查看订单</a></li>
-        </ul>
+        <div class="btns">
+            <p><a onclick="window.showbrokerLogin()" id="brokerLoginBtn">商户登录</a></p>
+            <p><a onclick="window.getToken()" id="getTokenBtn" class="disable">获取盈米token</a></p>
+            <p><a onclick="window.showInvoke()" id="invokeBtn" class="disable">购买基金</a></p>
+            <p><a onclick="window.showQuery()" id="queryBtn" class="disable">查看订单</a></p>
+        </div>
+        </div>
         <script type="text/javascript">
             var brokerToken = "";
             var yingmiToken = "";
@@ -116,11 +215,22 @@
                 document.getElementById('getToken').className="hide";
                 document.getElementById('invoke').className="hide";
                 document.getElementById('query').className="hide";
+                $('#brokerLoginTips,#getTokenTips,#queryTips,#invokeTips').addClass('hide');
+                $('#' + id + 'Tips').removeClass('hide');
                 document.getElementById(id).className="";
             }
+            function enableTab(id){
+                $('#' + id + 'Btn').removeClass('disable');
+            }
+            function isTabEnable(id){
+                return !$('#' + id + 'Btn').hasClass('disable');
+            }
+
             window.showQuery = function(){
-                show('query');
-                window.triggerQuery();
+                if(isTabEnable('query')) {
+                    show('query');
+                    window.triggerQuery();
+                }
             };
 
             window.showbrokerLogin = function(){
@@ -130,54 +240,67 @@
                 var brokerUserId = document.getElementById('brokerUserId').value,
                     password = document.getElementById('password').value;
 
-                $.post(serverHost + '/ymb/user/login',{
-                    name: brokerUserId,
-                    password: password
-                },function(data){
-                    document.getElementById('brokerLoginReturn').innerHTML = JSON.stringify(data);
-                    brokerToken = data.token;
+                $.ajax(serverHost + '/ymb/user/login', {
+                    method: 'POST',
+                    data: {
+                        name: brokerUserId,
+                        password: password
+                    },
+                    success: function (data) {
+                        $('#brokerLoginReturn').css('color','black').html('登录成功!!!');
+                        enableTab('getToken');
+                        brokerToken = data.token;
+                    },
+                    error: function(err,data){
+                        $('#brokerLoginReturn').css('color','red').html(JSON.stringify(err.responseJSON.msg));
+                    }
                 });
             };
 
             window.getToken = function(){
-                show('getToken');
-                if(brokerToken){
-                    $.ajax(serverHost + '/ymb/user/yingmi-token',{
-                        method: 'GET',
-                        data: {
-                            access_token: brokerToken
-                        },
-                        success: function(data){
-                            console.log(data);
-                            document.getElementById('yingmiToken').innerHTML = JSON.stringify(data);
-                            yingmiToken = data.yingmiToken;
-                            window.YingMiCsdk.initSDK({
-                                token: yingmiToken,
-                                brokerId: 'asdf'
-                            },function(err,data){
-                                if(err){
-                                    console.log(err.msg);
-                                }
-                            });
-                        },error: function(data){
-                            alert(data.responseJSON.msg);
-                        }
-                    });
-                }else{
-                    alert('您还没有登录');
+                if(isTabEnable('getToken')) {
+                    show('getToken');
+                    if (brokerToken) {
+                        $.ajax(serverHost + '/ymb/user/yingmi-token', {
+                            method: 'GET',
+                            data: {
+                                access_token: brokerToken
+                            },
+                            success: function (data) {
+                                document.getElementById('yingmiToken').innerHTML = data.yingmiToken;
+                                enableTab('invoke');
+                                yingmiToken = data.yingmiToken;
+                                window.YingMiCsdk.initSDK({
+                                    token: yingmiToken,
+                                    brokerId: '123',
+                                    container: document.getElementById('wrapper')
+                                }, function (err, data) {
+                                    if (err) {
+                                        console.log(err.msg);
+                                    }
+                                });
+                            }, error: function (data) {
+                                alert(data.responseJSON.msg);
+                            }
+                        });
+                    } else {
+                        alert('您还没有登录');
+                    }
                 }
             };
 
             window.showInvoke = function(){
-                show('invoke');
+                if(isTabEnable('invoke')) {
+                    show('invoke');
+                }
             };
 
-            window.triggerInvoke = function(){
+            window.triggerInvoke = function(fundCode){
                 if(yingmiToken){
                     var command = 'buyFund';
 
                     var params = {
-                        fundCode: $('#fundCode').val().trim()
+                        fundCode: fundCode
                     };
 
                     window.YingMiCsdk.callWithUI(command,params,function(err,data){
@@ -185,6 +308,7 @@
                             document.getElementById('invokeConsole').innerHTML = JSON.stringify(err);
                         }else{
                             document.getElementById('invokeConsole').innerHTML = 'successData: ' + JSON.stringify(data);
+                            enableTab('query');
                         }
                     });
 
@@ -209,6 +333,8 @@
                     alert('您还没有获取yingmi token');
                 }
             };
+            show('brokerLogin');
+            enableTab('brokerLogin');
         </script>
     </body>
 </html>
