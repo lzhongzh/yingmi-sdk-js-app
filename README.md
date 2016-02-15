@@ -22,7 +22,7 @@ npm install
 ## 运行
 
 ```
-npm dev
+npm start
 ```
 
 使用浏览器打开http://localhost:8080
