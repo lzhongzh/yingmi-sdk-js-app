@@ -2,7 +2,7 @@
 =====================
 
 在运行此项目之前请确认已部署[盈米接入商户模拟server](https://github.com/yingmi/openapi-sdk-broker-server)
-
+在浏览器中运行会有跨域问题（SDK作为web app在手机中运行没有跨域问题），可自行使用插件关闭浏览器跨域设置，如[chrome的CORS toggle插件](https://chrome.google.com/webstore/detail/cors-toggle/omcncfnpmcabckcddookmnajignpffnh?hl=en-US)
 # 安装和运行
 
 ## clone代码到本地
