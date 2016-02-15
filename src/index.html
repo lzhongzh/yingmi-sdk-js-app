@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="./node_modules/yingmi-csdk-test/dist/yingmi-csdk.js">
+        <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="../node_modules/yingmi-csdk-test/dist/yingmi-csdk.js">
         </script>
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <style>
@@ -17,7 +17,7 @@
                 margin:0;
                 text-align: center;
                 font-family:"Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSans,Arimo,"Droid Sans","wenquanyi micro hei","Hiragino Sans GB","Hiragino Sans GB W3",FontAwesome,sans-serif;
-                background:url('./img/bg.png') center center no-repeat;
+                background:url('img/bg.png') center center no-repeat;
             }
             #wrapper {
                 box-sizing: border-box;
@@ -205,11 +205,11 @@
         <script type="text/javascript">
             var brokerToken = "";
             var yingmiToken = "";
-            var serverHost = '';
+            var serverHost = '<%=ymbHost%>';
 
             var yingmiToken = null,
                 brokerToken = null;
-        
+
             function show(id){
                 document.getElementById('brokerLogin').className="hide";
                 document.getElementById('getToken').className="hide";
