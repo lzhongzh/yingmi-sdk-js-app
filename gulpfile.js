@@ -4,7 +4,7 @@ var gulp = require('gulp'),
   ejs = require('gulp-ejs-noext');
 
 var SERVE_PORT = '8080',
-    YMB_HOST = 'http://localhost:8086';
+    YMB_HOST = 'http://localhost:8088';
 
 var compile = function(host){
   return function(){
