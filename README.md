@@ -1,6 +1,8 @@
 盈米接入商户模拟js app - Yingmi SDK Js App
 =====================
 
+在运行此项目之前请确认已部署[盈米接入商户模拟server](https://github.com/yingmi/openapi-sdk-broker-server)
+
 # 安装和运行
 
 ## clone代码到本地
